@@ -72,14 +72,14 @@ private:
         int elements = size / radix;                                            // Количество элементов в каждом подмассиве
         vector<vector<Complex>> matrix(radix, vector<Complex>(elements));       // Матрица: radix подмассивов по elements элементов каждый
 
-        for (int r = 0; r < radix; ++r)                                         // Распределяем элементы исходного массива data в подмассивы sub
+        for (int r = 0; r < radix; ++r)                                         // Распределяем элементы исходного массива data в подмассивы matrix
             for (int i = 0; i < elements; ++i)
                 matrix[r][i] = data[i * radix + r];                             // Строим подмассивы из исходных данных
 
         for (int r = 0; r < radix; ++r)                                         // БПФ к каждому подмассиву
             fft_recursive(matrix[r], invert);
 
-        // Сборка выходного массива data из подмассивов sub с применением twiddle-факторов
+        // Сборка выходного массива data из подмассивов matrix с применением twiddle-факторов
         for (int i = 0; i < size; ++i)
         {
             data[i] = 0;                                                        // Обнуляем значение перед накоплением
