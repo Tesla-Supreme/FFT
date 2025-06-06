@@ -50,17 +50,17 @@ static mt19937 gen(rd());                                                       
 // Функция проверки: является ли length кратным только 2, 3 и 5
 static inline bool is_valid_length(const unsigned int length)
 {
-    return ((length % 2 == 0) && (length % 3 == 0) && (length % 5 == 0));
+    return (length % (2 * 3 * 5) == 0);
 }
 
 // Генерация целого случайного числа в диапазоне [LOW_EDGE, HIGH_EDGE]
 static unsigned int generate_random_number(const bool multiple_235)
 {
+    uniform_int_distribution<unsigned int> dist(LOW_EDGE, HIGH_EDGE);           // Равномерное распределение целых чисел в диапазоне [LOW_EDGE, HIGH_EDGE]
     if (multiple_235)
     {
         while (true)
         {
-            uniform_int_distribution<unsigned int> dist(LOW_EDGE, HIGH_EDGE);   // Равномерное распределение целых чисел в диапазоне [LOW_EDGE, HIGH_EDGE]
             unsigned int randomValue = dist(gen);
             if (is_valid_length(randomValue)) return randomValue;
         }
@@ -69,7 +69,6 @@ static unsigned int generate_random_number(const bool multiple_235)
     {
         while (true)
         {
-            uniform_int_distribution<unsigned int> dist(LOW_EDGE, HIGH_EDGE);
             unsigned int randomValue = dist(gen);
             if (!is_valid_length(randomValue)) return randomValue;
         }
@@ -226,7 +225,8 @@ int main()
     SetConsoleOutputCP(CP_UTF8);                                                // Для корректного отображения кириллицы
     const vector<unsigned int> lengths = form_lengths_values();                 // Вектор длин последовательностей
     
-    // Поиск позиции 1-го элемента в lengths для корректной записи в файлы
+    // Поиск позиции 1-го валидного элемента в lengths
+    // для корректной записи в файлы
     const auto iterator = find_if(lengths.cbegin(), lengths.cend(),\
     [](int element) { return is_valid_length(element); });
     const ptrdiff_t index = distance(lengths.cbegin(), iterator);
